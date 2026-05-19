@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Leitores - Biblioteca Mackenzie</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-4">
+        <a href="/biblioteca" class="btn btn-secondary mb-3">← Voltar ao Menu</a>
+        
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">Cadastrar Novo Leitor</h4>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/biblioteca/leitores/salvar}" th:object="${leitor}" method="POST" class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Nome Completo</label>
+                        <input type="text" th:field="*{nome}" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">E-mail</label>
+                        <input type="email" th:field="*{email}" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Registro Acadêmico (RA)</label>
+                        <input type="text" th:field="*{registroAcademico}" class="form-control" required>
+                    </div>
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-success">Salvar Leitor</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h4 class="mb-0">Leitores Cadastrados</h4>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>RA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="l : ${leitores}">
+                            <td th:text="${l.id}">1</td>
+                            <td th:text="${l.nome}">Ana Julia</td>
+                            <td th:text="${l.email}">ana@mack.br</td>
+                            <td th:text="${l.registroAcademico}">324XXXXX</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
