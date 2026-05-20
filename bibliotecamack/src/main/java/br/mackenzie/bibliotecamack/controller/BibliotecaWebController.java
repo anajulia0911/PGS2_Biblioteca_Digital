@@ -10,7 +10,7 @@ import br.mackenzie.bibliotecamack.service.LeitorService;
 import br.mackenzie.bibliotecamack.service.LivroService;
 
 @Controller
-@RequestMapping("/biblioteca")
+@RequestMapping("/biblioteca/admin")
 public class BibliotecaWebController {
 
     @Autowired
@@ -19,6 +19,7 @@ public class BibliotecaWebController {
     @Autowired
     private LeitorService leitorService;
 
+    // Se o usuário acessar "/biblioteca/admin", ele abre a página index
     @GetMapping
     public String index() {
         return "index";
@@ -34,15 +35,17 @@ public class BibliotecaWebController {
 
     @PostMapping("/livros/salvar")
     public String salvarLivro(@RequestParam String isbn) {
-        // Usa a sua lógica de buscar na API externa Open Library pelo ISBN
+        // Usa a lógica de buscar na API externa Open Library pelo ISBN
         livroService.salvarComOpenLibrary(isbn);
-        return "redirect:/biblioteca/livros";
+        // CORREÇÃO: O redirect precisa conter o caminho completo da URL mapeada
+        return "redirect:/biblioteca/admin/livros";
     }
 
     // --- TELAS DE LEITORES ---
     @GetMapping("/leitores")
     public String listarLeitores(Model model) {
-        model.addAttribute("leitores", leitorService.getLeitorRepository().findAll()); // ajuste conforme seus métodos
+        // CORREÇÃO EXTRA: Usando o método correto de busca do service se o getLeitorRepository não existir
+        model.addAttribute("leitores", leitorService.buscarTodos()); 
         model.addAttribute("leitor", new Leitor());
         return "leitores";
     }
@@ -50,6 +53,7 @@ public class BibliotecaWebController {
     @PostMapping("/leitores/salvar")
     public String salvarLeitor(@ModelAttribute Leitor leitor) {
         leitorService.create(leitor);
-        return "redirect:/biblioteca/leitores";
+        // CORREÇÃO: O redirect precisa conter o caminho completo da URL mapeada
+        return "redirect:/biblioteca/admin/leitores";
     }
 }

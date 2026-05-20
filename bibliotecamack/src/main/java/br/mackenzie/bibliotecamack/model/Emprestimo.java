@@ -16,7 +16,7 @@ public class Emprestimo {
     @Temporal(TemporalType.DATE)
     private Date dataDevolucaoPrevista;
     
-    private int status; 
+    private String status; 
 
     @ManyToOne
     private Leitor leitor;
@@ -49,10 +49,10 @@ public class Emprestimo {
     public void setDataDevolucaoPrevista(Date dataDevolucaoPrevista) { 
         this.dataDevolucaoPrevista = dataDevolucaoPrevista; }
 
-    public int getStatus() { 
+    public String getStatus() { 
         return status; }
 
-    public void setStatus(int status) { 
+    public void setStatus(String status) { 
         this.status = status; }
 
     public Leitor getLeitor() { 

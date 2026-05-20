@@ -1,5 +1,6 @@
 package br.mackenzie.bibliotecamack.service;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import br.mackenzie.bibliotecamack.model.Leitor;
@@ -17,10 +18,9 @@ public class LeitorService {
         }
     }
 
-    public Leitor findByRA(String ra) {
-        return leitorRepository.findByRegistroAcademico(ra);
-    }
-
+    public Optional<Leitor> findByRA(String ra) {
+    return leitorRepository.findByRegistroAcademico(ra);
+}
     public Iterable<Leitor> buscarTodos() {
         return leitorRepository.findAll();
     }

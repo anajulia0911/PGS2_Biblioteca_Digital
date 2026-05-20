@@ -1,41 +1,28 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Biblioteca Digital Mackenzie</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
-        <div class="container">
-            <a class="navbar-brand" href="#">Mack Biblioteca</a>
-        </div>
-    </nav>
-
-    <div class="container mt-5 text-center">
-        <h1 class="mb-4">Sistema de Biblioteca Digital</h1>
-        <p class="lead">Gerenciamento de livros, leitores e empréstimos integrado à Open Library.</p>
-        
-        <div class="row mt-5 justify-content-center">
-            <div class="col-md-4">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Gerenciar Livros</h5>
-                        <p class="card-text">Cadastre via ISBN da Open Library e liste o acervo.</p>
-                        <a href="/biblioteca/livros" class="btn btn-danger">Ir para Livros</a>
-                    </div>
+<div class="container mt-5 text-center">
+    <h1 class="mb-4">Sistema de Biblioteca Digital Mackenzie</h1>
+    
+    <div class="row mt-5 justify-content-center g-4">
+        <div class="col-md-5">
+            <div class="card shadow-sm border-danger">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">🎓 Área do Aluno</h5>
+                    <p class="card-text text-muted">Acesse o catálogo, filtre por categorias e solicite seus empréstimos usando seu RA.</p>
+                    <a href="/biblioteca/usuario/login" class="btn btn-danger w-100">Entrar como Aluno</a>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Gerenciar Leitores</h5>
-                        <p class="card-text">Controle o cadastro de alunos (RA) e usuários.</p>
-                        <a href="/biblioteca/leitores" class="btn btn-danger">Ir para Leitores</a>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">⚙️ Painel Administrativo</h5>
+                    <p class="card-text text-muted">Cadastre novos alunos no sistema e adicione novos livros no acervo via API Open Library.</p>
+                    <div class="d-flex gap-2">
+                        <a href="/biblioteca/admin/livros" class="btn btn-secondary w-50">Inserir Livros</a>
+                        <a href="/biblioteca/admin/leitores" class="btn btn-secondary w-50">Inserir Leitores</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</body>
-</html>
+</div>
