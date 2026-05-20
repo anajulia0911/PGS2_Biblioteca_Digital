@@ -11,5 +11,5 @@ public interface EmprestimoRepository extends CrudRepository<Emprestimo, Long> {
 
     public List<Emprestimo> findByLeitor(Leitor leitor);
     
-    public List<Emprestimo> findByStatus(int status);
+    public List<Emprestimo> findByStatus(String status);
 }

@@ -6,4 +6,5 @@ import br.mackenzie.bibliotecamack.model.Categoria;
 
 @Repository
 public interface CategoriaRepository extends CrudRepository<Categoria, Long> {
+    Categoria findByNome(String nome);
 }

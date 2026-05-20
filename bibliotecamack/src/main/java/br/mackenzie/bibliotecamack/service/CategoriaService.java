@@ -1,6 +1,5 @@
 package br.mackenzie.bibliotecamack.service;
 
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import br.mackenzie.bibliotecamack.model.Categoria;
@@ -12,26 +11,22 @@ public class CategoriaService {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
-    // Criar ou Atualizar Categoria com validação defensiva
-    public Categoria save(Categoria categoria) {
-        if (categoria.getNome() != null && !categoria.getNome().trim().equalsIgnoreCase("")) {
-            return categoriaRepository.save(categoria);
+    // 1. Conecta perfeitamente com o 'categoriaService.create(categoria)' do seu Controller
+    public void create(Categoria categoria) {
+        if (categoria.getNome() != null && !categoria.getNome().trim().isEmpty()) {
+            categoriaRepository.save(categoria);
+        } else {
+            throw new IllegalArgumentException("O nome da categoria não pode ser vazio.");
         }
-        throw new IllegalArgumentException("O nome da categoria não pode ser vazio.");
     }
 
-    // Listar todas as categorias
-    public Iterable<Categoria> findAll() {
-        return categoriaRepository.findAll();
+    // 2. Conecta perfeitamente com o 'categoriaService.findByNome(nome)' do seu Controller
+    public Categoria findByNome(String nome) {
+        return categoriaRepository.findByNome(nome);
     }
 
-    // Buscar por ID
-    public Optional<Categoria> findById(Long id) {
-        return categoriaRepository.findById(id);
-    }
-
-    // Excluir por ID
-    public void deleteById(Long id) {
-        categoriaRepository.deleteById(id);
+    // 3. Conecta perfeitamente com o 'categoriaService.getTotalCategorias()' do seu Controller
+    public long getTotalCategorias() {
+        return categoriaRepository.count();
     }
 }
