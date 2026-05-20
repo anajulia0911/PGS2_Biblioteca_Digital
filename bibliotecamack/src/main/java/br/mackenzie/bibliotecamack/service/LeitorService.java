@@ -19,8 +19,9 @@ public class LeitorService {
     }
 
     public Optional<Leitor> findByRA(String ra) {
-    return leitorRepository.findByRegistroAcademico(ra);
-}
+        return leitorRepository.findByRegistroAcademico(ra);
+    }
+
     public Iterable<Leitor> buscarTodos() {
         return leitorRepository.findAll();
     }

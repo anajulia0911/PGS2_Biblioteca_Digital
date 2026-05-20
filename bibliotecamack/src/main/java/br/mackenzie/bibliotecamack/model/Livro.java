@@ -4,16 +4,21 @@ import jakarta.persistence.*;
 
 @Entity
 public class Livro {
-    @Id 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String titulo;
     private String isbn;
     private String anoPublicacao;
+    private String editora;
 
     @ManyToOne
     @JoinColumn(name = "autor_id")
     private Autor autor;
+
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
 
     // Getters e Setters
     public Long getId() { return id; }
@@ -24,6 +29,10 @@ public class Livro {
     public void setIsbn(String isbn) { this.isbn = isbn; }
     public String getAnoPublicacao() { return anoPublicacao; }
     public void setAnoPublicacao(String anoPublicacao) { this.anoPublicacao = anoPublicacao; }
+    public String getEditora() { return editora; }
+    public void setEditora(String editora) { this.editora = editora; }
     public Autor getAutor() { return autor; }
     public void setAutor(Autor autor) { this.autor = autor; }
+    public Categoria getCategoria() { return categoria; }
+    public void setCategoria(Categoria categoria) { this.categoria = categoria; }
 }

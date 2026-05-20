@@ -19,15 +19,17 @@ public class EmprestimoService {
             emprestimo.setDataEmprestimo(new Date());
         }
 
-    
         if (emprestimo.getDataDevolucaoPrevista() == null) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(emprestimo.getDataEmprestimo());
-            calendar.add(Calendar.DAY_OF_MONTH, 14); 
+            calendar.add(Calendar.DAY_OF_MONTH, 14);
             emprestimo.setDataDevolucaoPrevista(calendar.getTime());
         }
 
-        emprestimo.setStatus(0);
+        // status agora é String
+        if (emprestimo.getStatus() == null) {
+            emprestimo.setStatus("Ativo");
+        }
 
         return emprestimoRepository.save(emprestimo);
     }
@@ -39,7 +41,7 @@ public class EmprestimoService {
     public Emprestimo buscarPorId(Long id) {
         return emprestimoRepository.findById(id).orElse(null);
     }
-    
+
     public long getTotalEmprestimos() {
         return emprestimoRepository.count();
     }

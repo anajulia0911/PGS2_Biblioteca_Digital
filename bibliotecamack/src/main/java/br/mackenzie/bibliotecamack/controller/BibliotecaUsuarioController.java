@@ -9,6 +9,7 @@ import br.mackenzie.bibliotecamack.model.*;
 import br.mackenzie.bibliotecamack.repository.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.Calendar;
 
@@ -22,18 +23,15 @@ public class BibliotecaUsuarioController {
     @Autowired private CategoriaRepository categoriaRepository;
     @Autowired private EmprestimoRepository emprestimoRepository;
 
-    // 1. TELA DE LOGIN / ACESSO DO ALUNO
     @GetMapping("/login")
     public String telaLogin() {
         return "usuario/login";
     }
 
-    // 2. PAINEL DO LEITOR (CATÁLOGO COM FILTROS)
     @PostMapping("/catalogo")
     public String acessarCatalogo(@RequestParam("registroAcademico") String ra, Model model) {
-        // Simula a autenticação pelo RA
         Optional<Leitor> leitorOpt = leitorRepository.findByRegistroAcademico(ra);
-        
+
         if (leitorOpt.isEmpty()) {
             model.addAttribute("erro", "Registro Académico (RA) não encontrado!");
             return "usuario/login";
@@ -44,18 +42,17 @@ public class BibliotecaUsuarioController {
         model.addAttribute("livros", livroRepository.findAll());
         model.addAttribute("autores", autorRepository.findAll());
         model.addAttribute("categorias", categoriaRepository.findAll());
-        
+
         return "usuario/catalogo";
     }
 
-    // Rota complementar para quando o usuário aplicar um filtro de busca
     @GetMapping("/catalogo/filtrar")
     public String filtrarCatalogo(
             @RequestParam("leitorId") Long leitorId,
             @RequestParam(value = "autorId", required = false) Long autorId,
             @RequestParam(value = "categoriaId", required = false) Long categoriaId,
             Model model) {
-        
+
         Leitor leitor = leitorRepository.findById(leitorId).orElseThrow();
         Iterable<Livro> livrosFiltrados;
 
@@ -73,11 +70,10 @@ public class BibliotecaUsuarioController {
         model.addAttribute("livros", livrosFiltrados);
         model.addAttribute("autores", autorRepository.findAll());
         model.addAttribute("categorias", categoriaRepository.findAll());
-        
+
         return "usuario/catalogo";
     }
 
-    // 3. CONFIRMAÇÃO AUTOMÁTICA DE EMPRÉSTIMO
     @PostMapping("/solicitar-emprestimo")
     public String realizarEmprestimo(
             @RequestParam("leitorId") Long leitorId,
@@ -87,13 +83,11 @@ public class BibliotecaUsuarioController {
         Leitor leitor = leitorRepository.findById(leitorId).orElseThrow();
         Livro livro = livroRepository.findById(livroId).orElseThrow();
 
-        // Cria o empréstimo em tempo real
         Emprestimo emprestimo = new Emprestimo();
         emprestimo.setLeitor(leitor);
-        emprestimo.setLivro(java.util.List.of(livro));
+        emprestimo.setLivros(List.of(livro));  // corrigido: setLivros com List
         emprestimo.setDataEmprestimo(new Date());
 
-        // Define prazo automático de devolução para daqui a 7 dias
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_MONTH, 7);
         emprestimo.setDataDevolucaoPrevista(cal.getTime());
