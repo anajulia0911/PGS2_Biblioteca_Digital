@@ -7,7 +7,9 @@
                 <div class="card-body">
                     <h5 class="card-title fw-bold">🎓 Área do Aluno</h5>
                     <p class="card-text text-muted">Acesse o catálogo, filtre por categorias e solicite seus empréstimos usando seu RA.</p>
-                    <a href="/biblioteca/usuario/login" class="btn btn-danger w-100">Entrar como Aluno</a>
+                    
+                    <!-- Rota apontando para o endpoint de login -->
+                    <a th:href="@{/login}" href="/login" class="btn btn-danger w-100">Entrar como Aluno</a>
                 </div>
             </div>
         </div>
@@ -18,8 +20,10 @@
                     <h5 class="card-title fw-bold">⚙️ Painel Administrativo</h5>
                     <p class="card-text text-muted">Cadastre novos alunos no sistema e adicione novos livros no acervo via API Open Library.</p>
                     <div class="d-flex gap-2">
-                        <a href="/biblioteca/admin/livros" class="btn btn-secondary w-50">Inserir Livros</a>
-                        <a href="/biblioteca/admin/leitores" class="btn btn-secondary w-50">Inserir Leitores</a>
+                        
+                        <!-- Rotas apontando para os endpoints de Livros e Leitores -->
+                        <a th:href="@{/livros}" href="/livros" class="btn btn-secondary w-50">Inserir Livros</a>
+                        <a th:href="@{/leitores}" href="/leitores" class="btn btn-secondary w-50">Inserir Leitores</a>
                     </div>
                 </div>
             </div>

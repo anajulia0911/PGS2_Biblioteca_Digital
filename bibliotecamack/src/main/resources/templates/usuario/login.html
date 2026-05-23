@@ -17,13 +17,13 @@
 
         <form th:action="@{/biblioteca/usuario/catalogo}" method="POST">
             <div class="mb-3">
-                <label class="form-label">Digite o seu RA (Registro Académico):</label>
+                <label class="form-label">Digite o seu RA (Registro Acadêmico):</label>
                 <input type="text" name="registroAcademico" class="form-control" placeholder="Ex: 324XXXXX" required>
             </div>
             <button type="submit" class="btn btn-danger w-100 py-2">Entrar no Catálogo</button>
         </form>
         <div class="text-center mt-3">
-            <a href="/biblioteca/leitores" class="text-decoration-none text-muted small">Não tem registo? Cadastre-se aqui</a>
+            <a th:href="@{/leitores}" href="/leitores" class="text-decoration-none text-muted small">Não tem registro? Cadastre-se aqui</a>
         </div>
     </div>
 </body>
