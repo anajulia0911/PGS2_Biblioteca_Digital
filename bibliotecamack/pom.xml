@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.18</version>
+        <version>3.3.5</version>
         <relativePath/>
     </parent>
 
@@ -19,7 +19,7 @@
     <description>Projeto Biblioteca Virtual</description>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>21</java.version>
         <lombok.version>1.18.32</lombok.version>
     </properties>
 
