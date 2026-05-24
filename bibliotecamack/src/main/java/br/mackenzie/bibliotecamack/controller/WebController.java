@@ -63,4 +63,9 @@ public class WebController {
     public String telaCatalogo() {
         return "usuario/catalogo";
     }
+    @GetMapping("/livros/deletar/{id}")
+    public String deletarLivro(@PathVariable Long id) {
+        livroService.deletar(id);
+        return "redirect:/livros";
+    }
 }

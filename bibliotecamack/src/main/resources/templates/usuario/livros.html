@@ -15,7 +15,7 @@
                 <h4 class="mb-0">Adicionar Novo Livro (via Open Library API)</h4>
             </div>
             <div class="card-body">
-                <form action="/biblioteca/livros/salvar" method="POST" class="row g-3">
+                <form th:action="@{/livros/salvar}" method="POST" class="row g-3">
                     <div class="col-md-8">
                         <label for="isbn" class="form-label">Digite o ISBN do Livro:</label>
                         <input type="text" id="isbn" name="isbn" class="form-control" placeholder="Ex: 0451526538" required>
@@ -39,6 +39,7 @@
                             <th>Título</th>
                             <th>ISBN</th>
                             <th>Editora</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -47,7 +48,14 @@
                             <td th:text="${livro.titulo}">Título Exemplo</td>
                             <td th:text="${livro.isbn}">123456</td>
                             <td th:text="${livro.editora != null ? livro.editora : 'Não informada'}">Editora</td>
-                        </tr>
+                            <td>
+                                <a th:href="@{/livros/deletar/{id}(id=${livro.id})}" 
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Tem certeza que deseja excluir este livro?')">
+                                Excluir
+                                </a>
+                            </td>
+                        </tr>w
                     </tbody>
                 </table>
             </div>

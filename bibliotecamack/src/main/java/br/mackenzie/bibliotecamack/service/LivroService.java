@@ -66,4 +66,8 @@ public class LivroService {
     public Iterable<Livro> buscarTodos() {
         return repository.findAll();
     }
+
+    public void deletar(Long id) {
+        repository.deleteById(id);
+    }
 }
