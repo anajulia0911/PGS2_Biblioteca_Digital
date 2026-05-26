@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import br.mackenzie.bibliotecamack.model.Livro;
 import br.mackenzie.bibliotecamack.model.Autor;
 import br.mackenzie.bibliotecamack.model.Categoria;
+import java.util.Optional;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface LivroRepository extends CrudRepository<Livro, Long> {
     
     // Procura livros filtrando pela Categoria
     List<Livro> findByCategoria(Categoria categoria);
+
+    Optional<Livro> findByIsbn(String isbn);
 }

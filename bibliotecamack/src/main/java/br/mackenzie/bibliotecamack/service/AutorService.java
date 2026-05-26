@@ -23,4 +23,8 @@ public class AutorService {
     public long getTotalAutores() {
         return autorRepository.count();
     }
+
+    public void deletar(Long id) {
+    autorRepository.deleteById(id);
+}
 }

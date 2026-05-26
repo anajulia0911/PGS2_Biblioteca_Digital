@@ -8,11 +8,15 @@ import br.mackenzie.bibliotecamack.model.Livro;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
 @Service
 public class LivroService {
 
     @Autowired
     private LivroRepository repository;
+
+    @Autowired
+    private br.mackenzie.bibliotecamack.repository.EmprestimoRepository emprestimoRepository;
 
     public Livro salvarComOpenLibrary(String isbn) {
         // 1. Define a URL da API da Open Library com o ISBN fornecido
@@ -62,12 +66,74 @@ public class LivroService {
             throw new RuntimeException("Erro ao conectar ou processar dados da API Open Library: " + e.getMessage());
         }
     }
+    public Livro buscarPreviewPorIsbn(String isbn) {
+    // Verifica se já está cadastrado
+    if (repository.findByIsbn(isbn).isPresent()) {
+        throw new RuntimeException("DUPLICADO");
+    }
+
+    String url = "https://openlibrary.org/api/books?bibkeys=ISBN:" + isbn + "&format=json&jscmd=data";
+    RestTemplate restTemplate = new RestTemplate();
+
+    try {
+        String jsonResposta = restTemplate.getForObject(url, String.class);
+        Livro livro = new Livro();
+        livro.setIsbn(isbn);
+
+        if (jsonResposta != null && !jsonResposta.isEmpty()) {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode raiz = mapper.readTree(jsonResposta);
+            JsonNode dadosLivro = raiz.path("ISBN:" + isbn);
+
+            if (!dadosLivro.isMissingNode()) {
+                if (dadosLivro.has("title")) livro.setTitulo(dadosLivro.get("title").asText());
+                if (dadosLivro.has("publishers") && dadosLivro.get("publishers").isArray()) {
+                    livro.setEditora(dadosLivro.get("publishers").get(0).get("name").asText());
+                }
+            } else {
+                livro.setTitulo("ISBN não encontrado na Open Library");
+                livro.setEditora("Desconhecida");
+            }
+        }
+        return livro; // retorna sem salvar
+    } catch (RuntimeException e) {
+        throw e;
+    } catch (Exception e) {
+        throw new RuntimeException("Erro ao consultar API: " + e.getMessage());
+    }
+}
+
+public Livro salvarManual(String titulo, String isbn, String editora, Long autorId, Long categoriaId) {
+    Livro livro = new Livro();
+    livro.setTitulo(titulo);
+    livro.setIsbn(isbn);
+    livro.setEditora(editora);
+    if (autorId != null) {
+        repository.findById(autorId).ifPresent(l -> {}); // só para não quebrar
+        br.mackenzie.bibliotecamack.model.Autor autor = new br.mackenzie.bibliotecamack.model.Autor();
+        autor.setId(autorId);
+        livro.setAutor(autor);
+    }
+    if (categoriaId != null) {
+        br.mackenzie.bibliotecamack.model.Categoria cat = new br.mackenzie.bibliotecamack.model.Categoria();
+        cat.setId(categoriaId);
+        livro.setCategoria(cat);
+    }
+    return repository.save(livro);
+}
 
     public Iterable<Livro> buscarTodos() {
         return repository.findAll();
     }
 
     public void deletar(Long id) {
-        repository.deleteById(id);
+    // Remove vínculos de empréstimo antes de excluir
+    Livro livro = repository.findById(id).orElseThrow();
+    Iterable<br.mackenzie.bibliotecamack.model.Emprestimo> emprestimos = emprestimoRepository.findAll();
+    for (br.mackenzie.bibliotecamack.model.Emprestimo e : emprestimos) {
+        e.getLivros().remove(livro);
+        emprestimoRepository.save(e);
     }
+    repository.deleteById(id);
+}
 }

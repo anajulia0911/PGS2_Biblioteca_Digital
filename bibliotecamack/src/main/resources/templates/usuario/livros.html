@@ -6,60 +6,92 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
-    <div class="container mt-4">
-        <!-- Link corrigido para voltar ao menu principal -->
-        <a th:href="@{/}" href="/" class="btn btn-secondary mb-3">← Voltar ao Menu</a>
-        
-        <div class="card mb-4 shadow-sm">
-            <div class="card-header bg-danger text-white">
-                <h4 class="mb-0">Adicionar Novo Livro (via Open Library API)</h4>
-            </div>
-            <div class="card-body">
-                <form th:action="@{/livros/salvar}" method="POST" class="row g-3">
-                    <div class="col-md-8">
-                        <label for="isbn" class="form-label">Digite o ISBN do Livro:</label>
-                        <input type="text" id="isbn" name="isbn" class="form-control" placeholder="Ex: 0451526538" required>
-                    </div>
-                    <div class="col-md-4 d-flex align-items-end">
-                        <button type="submit" class="btn btn-success w-100">Buscar e Cadastrar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+<div class="container mt-4">
+    <a th:href="@{/}" href="/" class="btn btn-secondary mb-3">← Voltar ao Menu</a>
 
-        <div class="card shadow-sm">
-            <div class="card-header bg-dark text-white">
-                <h4 class="mb-0">Livros no Acervo</h4>
+    <!-- ALERTAS -->
+    <div th:if="${param.sucesso}" class="alert alert-success">Livro cadastrado com sucesso!</div>
+    <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
+
+    <!-- ETAPA 1: BUSCAR -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0">Buscar Livro por ISBN</h4>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/livros/buscar}" method="POST" class="row g-3">
+                <div class="col-md-8">
+                    <label class="form-label">Digite o ISBN do Livro</label>
+                    <input type="text" name="isbn" class="form-control" placeholder="Ex: 0451526538" required>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-danger w-100">🔍 Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ETAPA 2: PREVIEW + CONFIRMAÇÃO (aparece só após busca) -->
+    <div th:if="${preview}" class="card mb-4 shadow-sm border-success">
+        <div class="card-header bg-success text-white">
+            <h4 class="mb-0">Livro Encontrado — Confirmar Cadastro?</h4>
+        </div>
+        <div class="card-body">
+            <div class="row g-2 mb-3">
+                <div class="col-md-6">
+                    <span class="text-muted small">Título</span>
+                    <p class="fw-bold mb-0" th:text="${preview.titulo}">Título</p>
+                </div>
+                <div class="col-md-3">
+                    <span class="text-muted small">ISBN</span>
+                    <p class="fw-bold mb-0" th:text="${preview.isbn}">ISBN</p>
+                </div>
+                <div class="col-md-3">
+                    <span class="text-muted small">Editora</span>
+                    <p class="fw-bold mb-0" th:text="${preview.editora}">Editora</p>
+                </div>
             </div>
-            <div class="card-body">
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Título</th>
-                            <th>ISBN</th>
-                            <th>Editora</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="livro : ${livros}">
-                            <td th:text="${livro.id}">1</td>
-                            <td th:text="${livro.titulo}">Título Exemplo</td>
-                            <td th:text="${livro.isbn}">123456</td>
-                            <td th:text="${livro.editora != null ? livro.editora : 'Não informada'}">Editora</td>
-                            <td>
-                                <a th:href="@{/livros/deletar/{id}(id=${livro.id})}" 
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('Tem certeza que deseja excluir este livro?')">
-                                Excluir
-                                </a>
-                            </td>
-                        </tr>w
-                    </tbody>
-                </table>
+            <div class="d-flex gap-2">
+                <form th:action="@{/livros/salvar}" method="POST">
+                    <input type="hidden" name="isbn" th:value="${isbnBuscado}">
+                    <button type="submit" class="btn btn-success">✅ Confirmar Cadastro</button>
+                </form>
+                <a href="/livros" class="btn btn-outline-secondary">✖ Cancelar</a>
             </div>
         </div>
     </div>
+
+    <!-- TABELA DE LIVROS -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">Livros no Acervo</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Título</th><th>ISBN</th><th>Editora</th><th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="livro : ${livros}">
+                        <td th:text="${livro.id}"></td>
+                        <td th:text="${livro.titulo}"></td>
+                        <td th:text="${livro.isbn}"></td>
+                        <td th:text="${livro.editora != null ? livro.editora : 'Não informada'}"></td>
+                        <td>
+                            <a th:href="@{/livros/deletar/{id}(id=${livro.id})}"
+                               class="btn btn-danger btn-sm"
+                               onclick="return confirm('Tem certeza que deseja excluir este livro?')">
+                                Excluir
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -29,4 +29,8 @@ public class CategoriaService {
     public long getTotalCategorias() {
         return categoriaRepository.count();
     }
+
+    public void deletar(Long id) {
+    categoriaRepository.deleteById(id);
+}
 }

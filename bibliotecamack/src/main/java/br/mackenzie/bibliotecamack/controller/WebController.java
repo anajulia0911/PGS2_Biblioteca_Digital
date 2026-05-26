@@ -5,46 +5,103 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import br.mackenzie.bibliotecamack.model.Autor;
+import br.mackenzie.bibliotecamack.model.Categoria;
 import br.mackenzie.bibliotecamack.model.Leitor;
+import br.mackenzie.bibliotecamack.model.Livro;
+import br.mackenzie.bibliotecamack.repository.AutorRepository;
+import br.mackenzie.bibliotecamack.repository.CategoriaRepository;
+import br.mackenzie.bibliotecamack.service.AutorService;
+import br.mackenzie.bibliotecamack.service.CategoriaService;
 import br.mackenzie.bibliotecamack.service.LeitorService;
 import br.mackenzie.bibliotecamack.service.LivroService;
 
 @Controller
 public class WebController {
 
-    @Autowired
-    private LeitorService leitorService;
+    @Autowired private LeitorService leitorService;
+    @Autowired private LivroService livroService;
+    @Autowired private AutorService autorService;
+    @Autowired private CategoriaService categoriaService;
+    @Autowired private AutorRepository autorRepository;
+    @Autowired private CategoriaRepository categoriaRepository;
 
-    @Autowired
-    private LivroService livroService;
-
-    // Página inicial
     @GetMapping("/")
     public String paginaInicial() {
         return "usuario/index";
     }
 
-    // Tela de login
     @GetMapping("/login")
     public String telaLogin() {
         return "usuario/login";
     }
 
-    // ✅ TELA DE LIVROS (AGORA FUNCIONANDO COM LISTA)
-    @GetMapping("/livros")
-    public String telaLivros(Model model) {
+    @GetMapping("/admin")
+    public String telaAdmin(Model model) {
         model.addAttribute("livros", livroService.buscarTodos());
-        return "usuario/livros";
+        model.addAttribute("autores", autorRepository.findAll());
+        model.addAttribute("categorias", categoriaRepository.findAll());
+        model.addAttribute("novoAutor", new Autor());
+        model.addAttribute("novaCategoria", new Categoria());
+        return "usuario/admin";
     }
 
-    // ✅ SALVAR LIVRO VIA ISBN (API)
+    @PostMapping("/livros/buscar")
+    public String buscarLivro(@RequestParam String isbn, Model model) {
+        model.addAttribute("livros", livroService.buscarTodos());
+        model.addAttribute("autores", autorRepository.findAll());
+        model.addAttribute("categorias", categoriaRepository.findAll());
+        model.addAttribute("novoAutor", new Autor());
+        model.addAttribute("novaCategoria", new Categoria());
+        try {
+            Livro preview = livroService.buscarPreviewPorIsbn(isbn);
+            model.addAttribute("preview", preview);
+            model.addAttribute("isbnBuscado", isbn);
+        } catch (RuntimeException e) {
+            if (e.getMessage().equals("DUPLICADO")) {
+                model.addAttribute("erro", "Este livro (ISBN: " + isbn + ") já está cadastrado!");
+            } else {
+                model.addAttribute("erro", "Erro ao buscar na API: " + e.getMessage());
+            }
+        }
+        return "usuario/admin";
+    }
+
     @PostMapping("/livros/salvar")
     public String salvarLivro(@RequestParam String isbn) {
         livroService.salvarComOpenLibrary(isbn);
-        return "redirect:/livros";
+        return "redirect:/admin?sucesso=livro";
     }
 
-    // Tela de leitores
+    @PostMapping("/livros/salvar-manual")
+    public String salvarLivroManual(
+            @RequestParam String titulo,
+            @RequestParam(required = false) String isbn,
+            @RequestParam(required = false) String editora,
+            @RequestParam(required = false) Long autorId,
+            @RequestParam(required = false) Long categoriaId) {
+        livroService.salvarManual(titulo, isbn, editora, autorId, categoriaId);
+        return "redirect:/admin?sucesso=livro";
+    }
+
+    @PostMapping("/autores/salvar")
+    public String salvarAutor(@ModelAttribute Autor autor) {
+        autorService.create(autor);
+        return "redirect:/admin?sucesso=autor";
+    }
+
+    @PostMapping("/categorias/salvar")
+    public String salvarCategoria(@ModelAttribute Categoria categoria) {
+        categoriaService.create(categoria);
+        return "redirect:/admin?sucesso=categoria";
+    }
+
+    @GetMapping("/livros/deletar/{id}")
+    public String deletarLivro(@PathVariable Long id) {
+        livroService.deletar(id);
+        return "redirect:/admin";
+    }
+
     @GetMapping("/leitores")
     public String telaLeitores(Model model) {
         model.addAttribute("leitor", new Leitor());
@@ -58,14 +115,20 @@ public class WebController {
         return "redirect:/leitores";
     }
 
-    // Tela catálogo
     @GetMapping("/catalogo")
     public String telaCatalogo() {
         return "usuario/catalogo";
     }
-    @GetMapping("/livros/deletar/{id}")
-    public String deletarLivro(@PathVariable Long id) {
-        livroService.deletar(id);
-        return "redirect:/livros";
-    }
+
+    @GetMapping("/autores/deletar/{id}")
+public String deletarAutor(@PathVariable Long id) {
+    autorService.deletar(id);
+    return "redirect:/admin?sucesso=autor";
+}
+
+@GetMapping("/categorias/deletar/{id}")
+public String deletarCategoria(@PathVariable Long id) {
+    categoriaService.deletar(id);
+    return "redirect:/admin?sucesso=categoria";
+}
 }
