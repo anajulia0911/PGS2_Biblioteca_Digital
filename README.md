@@ -133,7 +133,7 @@ Leitor "1" -- "0..*" Emprestimo : solicita >
 Emprestimo "0..*" -- "1..*" Livro : contém >
 
 @enduml
-
+```
 # Diagrama de Sequência no README
 
 ```markdown
@@ -171,7 +171,7 @@ deactivate Serv
 Ctrl --> Usuario : HTTP 201 Created
 
 @enduml
-
+```
 ## Como enviar para o GitHub
 
 # Inicializar o Git
