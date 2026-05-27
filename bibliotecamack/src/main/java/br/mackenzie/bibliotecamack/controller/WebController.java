@@ -102,6 +102,27 @@ public class WebController {
         return "redirect:/admin";
     }
 
+    @GetMapping("/livros/editar/{id}")
+public String telaEditarLivro(@PathVariable Long id, Model model) {
+    Livro livro = livroService.buscarPorId(id);
+    model.addAttribute("livroEditar", livro);
+    model.addAttribute("autores", autorRepository.findAll());
+    model.addAttribute("categorias", categoriaRepository.findAll());
+    return "usuario/editar-livro";
+}
+
+@PostMapping("/livros/editar/{id}")
+public String salvarEdicaoLivro(
+        @PathVariable Long id,
+        @RequestParam String titulo,
+        @RequestParam(required = false) String isbn,
+        @RequestParam(required = false) String editora,
+        @RequestParam(required = false) Long autorId,
+        @RequestParam(required = false) Long categoriaId) {
+    livroService.atualizar(id, titulo, isbn, editora, autorId, categoriaId);
+    return "redirect:/admin?sucesso=livro";
+}
+
     @GetMapping("/leitores")
     public String telaLeitores(Model model) {
         model.addAttribute("leitor", new Leitor());
@@ -131,4 +152,17 @@ public String deletarCategoria(@PathVariable Long id) {
     categoriaService.deletar(id);
     return "redirect:/admin?sucesso=categoria";
 }
+
+@GetMapping("/cadastro")
+public String telaCadastroAluno(Model model) {
+    model.addAttribute("leitor", new Leitor());
+    return "usuario/cadastro";
+}
+
+@PostMapping("/cadastro/salvar")
+public String salvarCadastroAluno(@ModelAttribute Leitor leitor) {
+    leitorService.create(leitor);
+    return "redirect:/login?cadastrado=true";
+}
+
 }

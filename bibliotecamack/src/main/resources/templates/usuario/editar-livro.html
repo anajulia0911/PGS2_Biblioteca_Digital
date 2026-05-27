@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Livro - Biblioteca Mackenzie</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-4" style="max-width: 700px;">
+    <a href="/admin" class="btn btn-secondary mb-3">← Voltar ao Painel</a>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-warning text-dark">
+            <h4 class="mb-0">✏️ Editar Livro</h4>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/livros/editar/{id}(id=${livroEditar.id})}" method="POST" class="row g-3">
+
+                <div class="col-md-8">
+                    <label class="form-label">Título *</label>
+                    <input type="text" name="titulo" class="form-control"
+                           th:value="${livroEditar.titulo}" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">ISBN</label>
+                    <input type="text" name="isbn" class="form-control"
+                           th:value="${livroEditar.isbn}">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Editora</label>
+                    <input type="text" name="editora" class="form-control"
+                           th:value="${livroEditar.editora}">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Autor</label>
+                    <select name="autorId" class="form-select">
+                        <option value="">Sem autor</option>
+                        <option th:each="a : ${autores}"
+                                th:value="${a.id}"
+                                th:text="${a.nome}"
+                                th:selected="${livroEditar.autor != null and livroEditar.autor.id == a.id}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Categoria</label>
+                    <select name="categoriaId" class="form-select">
+                        <option value="">Sem categoria</option>
+                        <option th:each="c : ${categorias}"
+                                th:value="${c.id}"
+                                th:text="${c.nome}"
+                                th:selected="${livroEditar.categoria != null and livroEditar.categoria.id == c.id}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-12 d-flex justify-content-between mt-2">
+                    <a href="/admin" class="btn btn-outline-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-warning">💾 Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

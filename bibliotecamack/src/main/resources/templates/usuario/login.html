@@ -14,6 +14,9 @@
         </div>
         
         <div th:if="${erro}" class="alert alert-danger text-center" th:text="${erro}"></div>
+        <div th:if="${param.cadastrado}" class="alert alert-success text-center">
+            Cadastro realizado! Agora entre com seu RA.
+        </div>
 
         <form th:action="@{/biblioteca/usuario/catalogo}" method="POST">
             <div class="mb-3">
@@ -23,7 +26,7 @@
             <button type="submit" class="btn btn-danger w-100 py-2">Entrar no Catálogo</button>
         </form>
         <div class="text-center mt-3">
-            <a th:href="@{/leitores}" href="/leitores" class="text-decoration-none text-muted small">Não tem registro? Cadastre-se aqui</a>
+           <a th:href="@{/cadastro}" href="/cadastro" class="text-decoration-none text-muted small">Não tem registro? Cadastre-se aqui</a>
         </div>
     </div>
 </body>

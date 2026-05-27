@@ -2,6 +2,7 @@ package br.mackenzie.bibliotecamack.model;
 
 import jakarta.persistence.*;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Autor{
@@ -12,6 +13,7 @@ public class Autor{
     private String nacionalidade;
 
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL)
+    @JsonIgnore 
     private List<Livro> livros;
 
     // Getters e Setters
