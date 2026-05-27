@@ -22,7 +22,7 @@ O sistema permite cadastrar, listar, editar e excluir livros, autores, categoria
 ## Como executar o projeto
 
 # 1. Clone o repositório
-git clone https://github.com/SEU-USUARIO/PGS2_Biblioteca_Digital.git
+git clone https://github.com/anajulia0911/PGS2_Biblioteca_Digital
 
 # 2. Entre na pasta do projeto
 cd PGS2_Biblioteca_Digital
@@ -96,8 +96,7 @@ git add .
 git commit -m "Primeiro commit - Biblioteca Digital"
 
 # Conectar ao repositório remoto
-git remote add origin https://github.com/SEU-USUARIO/PGS2_Biblioteca_Digital.git
-
+git remote add origin https://github.com/anajulia0911/PGS2_Biblioteca_Digital
 # Enviar para o GitHub
 git branch -M main
 git push -u origin main
