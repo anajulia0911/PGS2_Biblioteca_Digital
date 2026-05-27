@@ -84,94 +84,13 @@ src/main/resources
 ├── static
 └── application.properties
 ## Diagrama de Classes
+<img width="466" height="236" alt="WhatsApp Image 2026-05-27 at 08 28 59" src="https://github.com/user-attachments/assets/80025714-afd6-40c4-b7ab-c259291f5c3a" />
 
-```plantuml
-@startuml
-package "br.mackenzie.bibliotecamack.model" {
 
-    class Autor {
-        - Long id
-        - String nome
-        - String dataNascimento
-    }
-
-    class Categoria {
-        - Long id
-        - String nome
-        - String descricao
-    }
-
-    class Livro {
-        - Long id
-        - String titulo
-        - String isbn
-        - String editora
-        - Autor autor
-        - Categoria categoria
-    }
-
-    class Leitor {
-        - Long id
-        - String nome
-        - String email
-        - String registroAcademico
-    }
-
-    class Emprestimo {
-        - Long id
-        - Date dataEmprestimo
-        - Date dataDevolucaoPrevista
-        - int status
-        - Leitor leitor
-        - List<Livro> livros
-    }
-}
-
-Autor "1" -- "0..*" Livro : possui >
-Categoria "1" -- "0..*" Livro : classifica >
-Leitor "1" -- "0..*" Emprestimo : solicita >
-Emprestimo "0..*" -- "1..*" Livro : contém >
-
-@enduml
-```
 # Diagrama de Sequência no README
 
-```markdown
-## Diagrama de Sequência
+<img width="466" height="540" alt="WhatsApp Image 2026-05-27 at 08 29 20" src="https://github.com/user-attachments/assets/97d7c954-d947-46b9-a789-4f79561f2505" />
 
-```plantuml
-@startuml
-
-actor Usuario
-participant "LivroController" as Ctrl
-participant "LivroService" as Serv
-participant "OpenLibrary API" as ExtAPI
-database "PostgreSQL" as DB
-
-Usuario -> Ctrl : POST /api/livros/isbn/{isbn}
-
-Ctrl -> Serv : salvarComOpenLibrary(isbn)
-
-activate Serv
-
-Serv -> ExtAPI : GET /api/books?bibkeys=ISBN:{isbn}&format=json
-
-ExtAPI --> Serv : JSON Payload
-
-Serv -> Serv : Parse JSON
-
-Serv -> DB : save(novoLivro)
-
-DB --> Serv : ID Gerado
-
-Serv --> Ctrl : Livro salvo
-
-deactivate Serv
-
-Ctrl --> Usuario : HTTP 201 Created
-
-@enduml
-```
 ## Como enviar para o GitHub
 
 # Inicializar o Git
